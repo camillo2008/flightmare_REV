@@ -105,10 +105,10 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
   quad_state_.x(QS::POSY) = uniform_dist_(random_gen_) * 9.0;
   quad_state_.x(QS::POSZ) = uniform_dist_(random_gen_) * 4 + 5.0;
 
-  std::cout << "Reset!\n";
+  /*std::cout << "Reset!\n";
   std::cout << "Starting Drone X:" << quad_state_.p(QS::POSX) << "\n";
   std::cout << "Starting Drone Y:" << quad_state_.p(QS::POSY) << "\n";
-  std::cout << "Starting Drone Z:" << quad_state_.p(QS::POSZ) << "\n";
+  std::cout << "Starting Drone Z:" << quad_state_.p(QS::POSZ) << "\n";*/
 
 
 
@@ -338,7 +338,7 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 bool VisionEnv::isTerminalState(Scalar &reward) {
   if (is_collision_) {
       reward = -1.0;
-      std::cout << "Collision!\n";
+      //std::cout << "Collision!\n";
       return true;
   }
 
@@ -359,7 +359,7 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
   bool z_valid = quad_state_.x(QS::POSZ) >= world_box_[4] + safty_threshold &&
                  quad_state_.x(QS::POSZ) <= world_box_[5] - safty_threshold;
  if (!x_valid || !y_valid || !z_valid) {
-    std::cout << "Drone X:" << quad_state_.p(QS::POSX) << "\n";
+    /*std::cout << "Drone X:" << quad_state_.p(QS::POSX) << "\n";
     std::cout << "Drone Y:" << quad_state_.p(QS::POSY) << "\n";
     std::cout << "Drone Z:" << quad_state_.p(QS::POSZ) << "\n";
 
@@ -378,7 +378,7 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
       std::cout << "Drone Z " << quad_state_.p(QS::POSZ) << " <= " << world_box_[5] - safty_threshold << " ?\n";
     }
 
-    std::cout << "XYZ not valid\n";
+    std::cout << "XYZ not valid\n";*/
 
     reward = -1.0;
     return true;
