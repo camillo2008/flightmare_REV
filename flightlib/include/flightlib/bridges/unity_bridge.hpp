@@ -115,7 +115,7 @@ class UnityBridge {
 
   // axuiliary variables
   const int max_output_request_{10000};
-  const Scalar unity_connection_time_out_{10.0};
+  const Scalar unity_connection_time_out_{15.0};
   bool unity_ready_{false};
 };
 
