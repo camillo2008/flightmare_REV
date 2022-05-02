@@ -149,9 +149,7 @@ void VecEnvBase<EnvBaseName>::setSeed(const int seed) {
 }
 
 template<typename EnvBaseName>
-void VecEnvBase<EnvBaseName>::setFakeQuadrotorScale(const float scale) {
-  int fakeQuadrotorScale_ = scale;
-}
+void VecEnvBase<EnvBaseName>::setFakeQuadrotorScale(const float scale) { }
 
 template<typename EnvBaseName>
 bool VecEnvBase<EnvBaseName>::getObs(Ref<MatrixRowMajor<>> obs) {
