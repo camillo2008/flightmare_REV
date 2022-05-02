@@ -73,7 +73,7 @@ class UnityBridge {
 
   // create unity bridge
   static std::shared_ptr<UnityBridge> getInstance(int input_port, int output_port) {
-    static std::shared_ptr<UnityBridge> bridge_ptr =
+    std::shared_ptr<UnityBridge> bridge_ptr =
       std::make_shared<UnityBridge>(input_port, output_port);
     return bridge_ptr;
   };
@@ -115,7 +115,7 @@ class UnityBridge {
 
   // axuiliary variables
   const int max_output_request_{10000};
-  const Scalar unity_connection_time_out_{100.0};
+  const Scalar unity_connection_time_out_{10.0};
   bool unity_ready_{false};
 };
 
