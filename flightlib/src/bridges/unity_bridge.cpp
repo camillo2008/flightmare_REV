@@ -51,7 +51,7 @@ UnityBridge::UnityBridge(int input_port, int output_port)
 }
 
 bool UnityBridge::initializeConnections() {
-  logger_.info("Initializing ZMQ connection!");
+  //logger_.info("Initializing ZMQ connection!");
 
   // create and bind an upload socket
   pub_.set(zmqpp::socket_option::send_high_water_mark, 6);
@@ -64,7 +64,7 @@ bool UnityBridge::initializeConnections() {
   // subscribe all messages from ZMQ
   sub_.subscribe("");
 
-  logger_.info("Initializing ZMQ connections done!");
+  //logger_.info("Initializing ZMQ connections done!");
 
   return true;
 }
@@ -74,7 +74,7 @@ bool UnityBridge::connectUnity(const SceneID scene_id) {
   Scalar sleep_useconds = 0.5 * 1e5;
   setScene(scene_id);
   // try to connect unity
-  logger_.info("Trying to Connect Unity.");
+  //logger_.info("Trying to Connect Unity.");
   std::cout << "[";
   while (!unity_ready_) {
     // if time out
@@ -97,7 +97,8 @@ bool UnityBridge::connectUnity(const SceneID scene_id) {
     std::cout << ".";
     std::cout.flush();
   }
-  logger_.info("Flightmare Unity is connected.");
+  //logger_.info("Flightmare Unity is connected.");
+  std::cout << "]" << std::endl;
   return unity_ready_;
 }
 
@@ -383,7 +384,7 @@ bool UnityBridge::getPointCloud(PointCloudMessage_t& pointcloud_msg,
   // send message without blocking
   pub_.send(msg, true);
 
-  logger_.info("Generate PointCloud: Timeout= %d seconds", (int)time_out);
+  //logger_.info("Generate PointCloud: Timeout= %d seconds", (int)time_out);
 
   Scalar run_time = 0.0;
   while (!std::filesystem::exists(pointcloud_msg.path +
