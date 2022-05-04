@@ -23,14 +23,14 @@ void VecEnvBase<EnvBaseName>::configEnv(const YAML::Node& cfg_node) {
     scene_id_ = 0;
   } else {
     //
-    logger_.info("Load Unity configuration.");
+    //logger_.info("Load Unity configuration.");
     unity_render_ = cfg_node["unity"]["render"].as<bool>();
     scene_id_ = cfg_node["unity"]["scene_id"].as<SceneID>();
     input_port_ = cfg_node["unity"]["input_port"].as<int>();
     output_port_ = cfg_node["unity"]["output_port"].as<int>();
 
     //
-    logger_.info("Load Simulation configuration.");
+    //logger_.info("Load Simulation configuration.");
     seed_ = cfg_node["simulation"]["seed"].as<int>();
     num_envs_ = cfg_node["simulation"]["num_envs"].as<int>();
     num_threads_ = cfg_node["simulation"]["num_threads"].as<int>();
@@ -64,19 +64,19 @@ void VecEnvBase<EnvBaseName>::configEnv(const YAML::Node& cfg_node) {
   for (auto& re : envs_[0]->extra_info_) {
     extra_info_names_.push_back(re.first);
   }
-  logger_.info("%d vectorized enviromnets created. ", num_envs_);
-  std::cout << "Vectorized Environment:\n"
-            << "obs dim    =            [" << obs_dim_ << "]\n"
-            << "act dim    =            [" << act_dim_ << "]\n"
-            << "rew dim    =            [" << rew_dim_ << "]\n"
-            << "einfo dim  =            [" << envs_[0]->extra_info_.size()
-            << "]\n"
-            << "img width  =            [" << img_width_ << "]\n"
-            << "img height =            [" << img_height_ << "]\n"
-            << "num_envs   =            [" << num_envs_ << "]\n"
-            << "num_thread =            [" << num_threads_ << "]\n"
-            << "seed       =            [" << seed_ << "]\n"
-            << "scene_id   =            [" << scene_id_ << "]" << std::endl;
+  //logger_.info("%d vectorized enviromnets created. ", num_envs_);
+  // std::cout << "Vectorized Environment:\n"
+  //           << "obs dim    =            [" << obs_dim_ << "]\n"
+  //           << "act dim    =            [" << act_dim_ << "]\n"
+  //           << "rew dim    =            [" << rew_dim_ << "]\n"
+  //           << "einfo dim  =            [" << envs_[0]->extra_info_.size()
+  //           << "]\n"
+  //           << "img width  =            [" << img_width_ << "]\n"
+  //           << "img height =            [" << img_height_ << "]\n"
+  //           << "num_envs   =            [" << num_envs_ << "]\n"
+  //           << "num_thread =            [" << num_threads_ << "]\n"
+  //           << "seed       =            [" << seed_ << "]\n"
+  //           << "scene_id   =            [" << scene_id_ << "]" << std::endl;
 }
 
 template<typename EnvBaseName>
@@ -230,7 +230,7 @@ bool VecEnvBase<EnvBaseName>::setUnity(bool render, const int input_port, const 
   for (int i = 0; i < num_envs_; i++) {
     envs_[i]->addQuadrotorToUnity(unity_bridge_ptr_);
   }
-  logger_.info("Flightmare Bridge created.");
+  //logger_.info("Flightmare Bridge created.");
   return true;
 }
 

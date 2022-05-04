@@ -695,7 +695,7 @@ bool VisionEnv::setUnity(bool render, const int input_port, const int output_por
 
   addQuadrotorToUnity(unity_bridge_ptr_);
 
-  logger_.info("Flightmare Bridge created.");
+  //logger_.info("Flightmare Bridge created.");
   return true;
 }
 
@@ -713,7 +713,7 @@ bool VisionEnv::setUnity(bool render) {
 
   addQuadrotorToUnity(unity_bridge_ptr_);
 
-  logger_.info("Flightmare Bridge created. Yeah!");
+  //logger_.info("Flightmare Bridge created. Yeah!");
   return true;
 }
 
