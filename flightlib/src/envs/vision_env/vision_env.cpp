@@ -101,7 +101,7 @@ bool VisionEnv::reset(Ref<Vector<>> obs) {
 
   // randomly reset the quadrotor state
   // reset position
-  quad_state_.x(QS::POSX) = uniform_dist_(random_gen_);
+  quad_state_.x(QS::POSX) = uniform_dist_(random_gen_)-7;
   quad_state_.x(QS::POSY) = uniform_dist_(random_gen_) * 9.0;
   quad_state_.x(QS::POSZ) = uniform_dist_(random_gen_) * 4 + 5.0;
 
@@ -339,7 +339,7 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
   if (is_collision_) {
       reward = -1.0;
       //std::cout << "Collision!\n";
-      return true;
+      return false;
   }
 
   // simulation time out
