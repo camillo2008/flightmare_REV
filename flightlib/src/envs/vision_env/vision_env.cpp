@@ -344,7 +344,7 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
 
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
-    reward = 0.0;
+    reward = -2.0;
     std::cout << "Timeout!\n";
     return true;
   }
@@ -380,7 +380,7 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
 
     std::cout << "XYZ not valid\n";*/
 
-    reward = -1.0;
+    reward = -3.0;
     return true;
   }
   return false;
