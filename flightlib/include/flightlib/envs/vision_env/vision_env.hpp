@@ -172,6 +172,7 @@ class VisionEnv final : public EnvBase {
 
   //
   std::string static_object_csv_;
+  std::string padded_static_object_csv_;
   std::string obstacle_cfg_path_;
   int num_dynamic_objects_;
   int num_static_objects_;

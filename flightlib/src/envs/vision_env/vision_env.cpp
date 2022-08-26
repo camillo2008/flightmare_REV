@@ -73,14 +73,36 @@ void VisionEnv::init() {
       "Cannot config Dynamic Object Yaml. Something wrong with the config "
       "file");
   }
+/*======================================================================================================*/
 
-  // add static objects
-  static_object_csv_ =
-    obstacle_cfg_path_ + std::string("/static_obstacles.csv");
-  if (!configStaticObjects(static_object_csv_)) {
-    logger_.error(
-      "Cannot config Static Object. Something wrong with the config file");
-  }
+    // add static objects
+    static_object_csv_ =
+            obstacle_cfg_path_ + std::string("/static_obstacles.csv");
+    padded_static_object_csv_ = obstacle_cfg_path_ + std::string("/padded_static_obstacles.csv");
+    if (!configStaticObjects(static_object_csv_)) {
+        logger_.error(
+                "Cannot config Static Object. Something wrong with the config file");
+    }
+/*===================================== WORKAROUND =================================================*/
+ //Clean or create the destination file//
+    std:: ofstream file;
+    file.open(padded_static_object_csv_);
+    file << "";
+    file.close();
+
+//Init files//
+    std::ofstream result; //file that will be passed to the renderer
+    std::ifstream origin; //original csv file
+    origin.open(static_object_csv_);
+    result.open(padded_static_object_csv_, std::ios_base::app);
+ //Add a dummy sphere in the file that will be passed to the renderer
+ //(because for some reason it ignores the first sphere, so we add a padding that will be removed)
+    result << "rpg_box01, 1000, 1000, 1000, 0.5725459398240496, 0.5500020884745568, -0.43015663944159077, 0.4297139921028159, 0.1, 0.1, 0.1" << "\n";
+    result << origin.rdbuf();
+
+    result.close();
+    origin.close();
+/*================================================================================================*/
 
   // use single rotor control or bodyrate control
   Scalar max_force = quad_ptr_->getDynamics().getForceMax();
@@ -511,6 +533,7 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
   return true;
 }
 
+
 bool VisionEnv::configDynamicObjects(const std::string &yaml_file) {
   //
   if (!(file_exists(yaml_file))) {
@@ -580,7 +603,7 @@ bool VisionEnv::configStaticObjects(const std::string &csv_file) {
     Vector<3> pos;
     pos << std::stod((std::string)row[1]), std::stod((std::string)row[2]),
       std::stod((std::string)row[3]);
-
+    std::cout<<pos[0]<<std::endl;
     Quaternion quat;
     quat.w() = std::stod((std::string)row[4]);
     quat.x() = std::stod((std::string)row[5]);
@@ -673,7 +696,7 @@ bool VisionEnv::addQuadrotorToUnity(const std::shared_ptr<UnityBridge> bridge) {
 
   //
   bridge->setRenderOffset(unity_render_offset_);
-  bridge->setObjectCSV(static_object_csv_);
+  bridge->setObjectCSV(padded_static_object_csv_);
   return true;
 }
 
