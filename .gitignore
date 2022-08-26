@@ -18,6 +18,6 @@ _build/
 .sass-cache
 _posts
 _site
-
+flightlib/cmake-build-debug/
 saved
 
