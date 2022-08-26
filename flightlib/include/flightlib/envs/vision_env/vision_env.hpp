@@ -24,158 +24,183 @@
 
 namespace flightlib {
 
-namespace visionenv {
+    namespace visionenv {
 
-enum Vision : int {
-  //
-  kNQuadState = 25,
+        enum Vision : int {
+            //
+            kNQuadState = 25,
 
-  kNObstacles = 10,
-  kNObstaclesState = 4,
+            kNObstacles = 10,
+            kNObstaclesState = 4,
 
-  // observations
-  kObs = 0,
-  kNObs = 15 + kNObstacles * kNObstaclesState,
+            // observations
+            kObs = 0,
+            kNObs = 15 + kNObstacles * kNObstaclesState,
 
-  // control actions
-  kAct = 0,
-  kNAct = 4,
-};
-}  // namespace visionenv
+            // control actions
+            kAct = 0,
+            kNAct = 4,
+        };
+    }  // namespace visionenv
 
-class VisionEnv final : public EnvBase {
- public:
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-  VisionEnv();
-  VisionEnv(const std::string &cfg_path, const int env_id);
-  VisionEnv(const YAML::Node &cfg_node, const int env_id);
-  ~VisionEnv();
+    class VisionEnv final : public EnvBase {
+    public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+        VisionEnv();
 
-  // - public OpenAI-gym-style functions
-  bool reset(Ref<Vector<>> obs) override;
-  bool reset(Ref<Vector<>> obs, bool random);
-  bool step(const Ref<Vector<>> act, Ref<Vector<>> obs,
-            Ref<Vector<>> reward) override;
+        VisionEnv(const std::string &cfg_path, const int env_id);
 
-  // - public set functions
-  bool loadParam(const YAML::Node &cfg);
+        VisionEnv(const YAML::Node &cfg_node, const int env_id);
 
-  // - public get functions
-  bool getObs(Ref<Vector<>> obs) override;
-  bool getImage(Ref<ImgVector<>> img, const bool rgb = true) override;
-  bool getDepthImage(Ref<DepthImgVector<>> img) override;
+        ~VisionEnv();
 
-  bool getObstacleState(Ref<Vector<>> obstacle_obs);
-  // get quadrotor states
-  bool getQuadAct(Ref<Vector<>> act) const;
-  bool getQuadState(Ref<Vector<>> state) const;
+        // - public OpenAI-gym-style functions
+        bool reset(Ref <Vector<>> obs) override;
 
-  void setFakeQuadrotorScale(float scale);
+        bool reset(Ref <Vector<>> obs, bool random);
 
-  // - auxiliar functions
-  bool isTerminalState(Scalar &reward) override;
-  bool addQuadrotorToUnity(const std::shared_ptr<UnityBridge> bridge) override;
+        bool step(const Ref <Vector<>> act, Ref <Vector<>> obs,
+                  Ref <Vector<>> reward) override;
 
-  friend std::ostream &operator<<(std::ostream &os,
-                                  const VisionEnv &vision_env);
+        // - public set functions
+        bool loadParam(const YAML::Node &cfg);
 
+        // - public get functions
+        bool getObs(Ref <Vector<>> obs) override;
 
-  bool configCamera(const YAML::Node &cfg_node);
-  bool configDynamicObjects(const std::string &yaml_file);
-  bool configStaticObjects(const std::string &csv_file);
+        bool getImage(Ref <ImgVector<>> img, const bool rgb = true) override;
 
-  bool simDynamicObstacles(const Scalar dt);
+        bool getDepthImage(Ref <DepthImgVector<>> img) override;
 
-  // flightmare (visualization)
-  bool setUnity(const bool render);
-  bool setUnity(const bool render, int input_port, int output_port);
-  bool connectUnity();
-  void disconnectUnity();
-  FrameID updateUnity(const FrameID frame_id);
+        bool getObstacleState(Ref <Vector<>> obstacle_obs);
+
+        // get quadrotor states
+        bool getQuadAct(Ref <Vector<>> act) const;
+
+        bool getQuadState(Ref <Vector<>> state) const;
+
+        void setFakeQuadrotorScale(float scale);
+
+        // - auxiliar functions
+        bool isTerminalState(Scalar &reward) override;
+
+        bool addQuadrotorToUnity(const std::shared_ptr <UnityBridge> bridge) override;
+
+        friend std::ostream &operator<<(std::ostream &os,
+                                        const VisionEnv &vision_env);
 
 
-  //
-  int getNumDetectedObstacles(void);
-  bool isCollision(void) { return is_collision_; };
-  inline std::vector<std::string> getRewardNames() { return reward_names_; }
-  inline void setSceneID(const SceneID id) { scene_id_ = id; }
-  inline std::shared_ptr<Quadrotor> getQuadrotor() { return quad_ptr_; }
-  inline std::vector<std::shared_ptr<UnityObject>> getDynamicObjects() {
-    return dynamic_objects_;
-  }
-  inline std::vector<std::shared_ptr<UnityObject>> getStaticObjects() {
-    return static_objects_;
-  }
+        bool configCamera(const YAML::Node &cfg_node);
 
-  std::unordered_map<std::string, float> extra_info_;
+        bool configDynamicObjects(const std::string &yaml_file);
 
- private:
-  bool computeReward(Ref<Vector<>> reward);
-  void init();
-  int env_id_;
-  // quadrotor
-  std::shared_ptr<Quadrotor> quad_ptr_;
-  //
-  std::vector<std::shared_ptr<UnityObject>> static_objects_;
-  std::vector<std::shared_ptr<UnityObject>> dynamic_objects_;
+        bool configStaticObjects(const std::string &csv_file);
 
-  QuadState quad_state_, quad_old_state_;
-  int quadrotorScale_;
-  Command cmd_;
-  Logger logger_{"VisionEnv"};
+        bool simDynamicObstacles(const Scalar dt);
 
-  // Define reward for training
-  Scalar vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_;
-  Vector<3> goal_linear_vel_;
-  bool is_collision_;
+        // flightmare (visualization)
+        bool setUnity(const bool render);
 
-  // max detection range (meter)
-  Scalar max_detection_range_;
-  std::vector<Scalar> relative_pos_norm_;
-  std::vector<Scalar> obstacle_radius_;
+        bool setUnity(const bool render, int input_port, int output_port);
+
+        bool connectUnity();
+
+        void disconnectUnity();
+
+        FrameID updateUnity(const FrameID frame_id);
 
 
-  int num_detected_obstacles_;
-  std::string difficulty_level_;
-  std::string env_folder_;
-  std::vector<Scalar> world_box_;
+        //
+        int getNumDetectedObstacles(void);
 
-  // observations and actions (for RL)
-  Vector<visionenv::kNObs> pi_obs_;
-  Vector<visionenv::kNAct> pi_act_;
-  Vector<visionenv::kNAct> old_pi_act_;
+        bool isCollision(void) { return is_collision_; };
 
-  // action and observation normalization (for learning)
-  Vector<visionenv::kNAct> act_mean_;
-  Vector<visionenv::kNAct> act_std_;
-  Vector<visionenv::kNObs> obs_mean_ = Vector<visionenv::kNObs>::Zero();
-  Vector<visionenv::kNObs> obs_std_ = Vector<visionenv::kNObs>::Ones();
+        inline std::vector <std::string> getRewardNames() { return reward_names_; }
 
-  // robot vision
-  std::shared_ptr<RGBCamera> rgb_camera_;
-  cv::Mat rgb_img_, gray_img_;
-  cv::Mat depth_img_;
+        inline void setSceneID(const SceneID id) { scene_id_ = id; }
 
-  // auxiliary variables
-  bool use_camera_{false};
-  YAML::Node cfg_;
-  std::vector<std::string> reward_names_;
+        inline std::shared_ptr <Quadrotor> getQuadrotor() { return quad_ptr_; }
 
-  // Unity Rendering
-  std::shared_ptr<UnityBridge> unity_bridge_ptr_;
-  SceneID scene_id_{UnityScene::WAREHOUSE};
-  bool unity_ready_{false};
-  bool unity_render_{false};
-  RenderMessage_t unity_output_;
-  uint16_t receive_id_{0};
-  Vector<3> unity_render_offset_;
+        inline std::vector <std::shared_ptr<UnityObject>> getDynamicObjects() {
+            return dynamic_objects_;
+        }
 
-  //
-  std::string static_object_csv_;
-  std::string padded_static_object_csv_;
-  std::string obstacle_cfg_path_;
-  int num_dynamic_objects_;
-  int num_static_objects_;
-};
+        inline std::vector <std::shared_ptr<UnityObject>> getStaticObjects() {
+            return static_objects_;
+        }
+
+        std::unordered_map<std::string, float> extra_info_;
+
+    private:
+        bool computeReward(Ref <Vector<>> reward);
+
+        void init();
+
+        int env_id_;
+        // quadrotor
+        std::shared_ptr <Quadrotor> quad_ptr_;
+        //
+        std::vector <std::shared_ptr<UnityObject>> static_objects_;
+        std::vector <std::shared_ptr<UnityObject>> dynamic_objects_;
+
+        QuadState quad_state_, quad_old_state_;
+        int quadrotorScale_;
+        Command cmd_;
+        Logger logger_{"VisionEnv"};
+
+        // Define reward for training
+        Scalar vel_coeff_, collision_coeff_, angular_vel_coeff_, survive_rew_;
+        Vector<3> goal_linear_vel_;
+        bool is_collision_;
+
+        // max detection range (meter)
+        Scalar max_detection_range_;
+        std::vector <Scalar> relative_pos_norm_;
+        std::vector <Scalar> obstacle_radius_;
+
+
+        int num_detected_obstacles_;
+        std::string difficulty_level_;
+        std::string env_folder_;
+        std::vector <Scalar> world_box_;
+
+        // observations and actions (for RL)
+        Vector <visionenv::kNObs> pi_obs_;
+        Vector <visionenv::kNAct> pi_act_;
+        Vector <visionenv::kNAct> old_pi_act_;
+
+        // action and observation normalization (for learning)
+        Vector <visionenv::kNAct> act_mean_;
+        Vector <visionenv::kNAct> act_std_;
+        Vector <visionenv::kNObs> obs_mean_ = Vector<visionenv::kNObs>::Zero();
+        Vector <visionenv::kNObs> obs_std_ = Vector<visionenv::kNObs>::Ones();
+
+        // robot vision
+        std::shared_ptr <RGBCamera> rgb_camera_;
+        cv::Mat rgb_img_, gray_img_;
+        cv::Mat depth_img_;
+
+        // auxiliary variables
+        bool use_camera_{false};
+        YAML::Node cfg_;
+        std::vector <std::string> reward_names_;
+
+        // Unity Rendering
+        std::shared_ptr <UnityBridge> unity_bridge_ptr_;
+        SceneID scene_id_{UnityScene::WAREHOUSE};
+        bool unity_ready_{false};
+        bool unity_render_{false};
+        bool droneCollide_{true};
+        RenderMessage_t unity_output_;
+        uint16_t receive_id_{0};
+        Vector<3> unity_render_offset_;
+
+        //
+        std::string static_object_csv_;
+        std::string padded_static_object_csv_;
+        std::string obstacle_cfg_path_;
+        int num_dynamic_objects_;
+        int num_static_objects_;
+    };
 
 }  // namespace flightlib

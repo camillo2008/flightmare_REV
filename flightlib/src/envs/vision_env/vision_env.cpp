@@ -358,15 +358,15 @@ bool VisionEnv::computeReward(Ref<Vector<>> reward) {
 }
 
 bool VisionEnv::isTerminalState(Scalar &reward) {
-  /*if (is_collision_) {
+    if (is_collision_ && droneCollide_) {
       reward = -1.0;
       //std::cout << "Collision!\n";
       return true;
   }
-*/
+
   // simulation time out
   if (cmd_.t >= max_t_ - sim_dt_) {
-    reward = 0.0;
+    reward = -2.0;
     std::cout << "Timeout!\n";
     return true;
   }
@@ -402,7 +402,7 @@ bool VisionEnv::isTerminalState(Scalar &reward) {
 
     std::cout << "XYZ not valid\n";*/
 
-    reward = -1.0;
+    reward = -3.0;
     return true;
   }
   return false;
@@ -488,6 +488,7 @@ bool VisionEnv::loadParam(const YAML::Node &cfg) {
     sim_dt_ = cfg["simulation"]["sim_dt"].as<Scalar>();
     max_t_ = cfg["simulation"]["max_t"].as<Scalar>();
     quadrotorScale_ = cfg["simulation"]["fakeQuadrotorScaleSize"].as<float>();
+    droneCollide_ = cfg["simulation"]["droneCollide"].as<bool>();
 
   } else {
     logger_.error("Cannot load [quadrotor_env] parameters");
