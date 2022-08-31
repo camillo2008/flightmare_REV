@@ -243,7 +243,7 @@ bool VisionEnv::getObstacleState(Ref<Vector<>> obs_state) {
           << relative_pos[sort_idx],
           obstacle_radius_[sort_idx];
       } else {
-        // if obstacles are beyong detection range
+        // if obstacles are beyond detection range
         obs_state.segment<visionenv::kNObstaclesState>(
           idx * visionenv::kNObstaclesState) =
           Vector<4>(max_detection_range_, max_detection_range_,
@@ -604,7 +604,6 @@ bool VisionEnv::configStaticObjects(const std::string &csv_file) {
     Vector<3> pos;
     pos << std::stod((std::string)row[1]), std::stod((std::string)row[2]),
       std::stod((std::string)row[3]);
-    std::cout<<pos[0]<<std::endl;
     Quaternion quat;
     quat.w() = std::stod((std::string)row[4]);
     quat.x() = std::stod((std::string)row[5]);
